@@ -1,0 +1,12 @@
+
+# Vagrant
+.vagrant/
+**/.vagrant/
+
+# Packer output
+output-darebox/
+
+# VSCode
+*.code-workspace
+
+test/versions.csv.old

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cpu_total=$(nproc)
+mem_total=$(free -h | grep -Po -m 1 "\d+\.*\d+(Gi|Mi)" | head -1)
+
+cpu_used=$(top -bn 5 -d 0.05 | grep '^%Cpu' | tail -n 1 | gawk '{print $2+$4+$6}')
+mem_used=$(free -h | grep -Po -m 1 "\d+\.*\d+(Gi|Mi)" | free -h | grep -Po -m 1 "\d+\.*\d+(Gi|Mi)" | head -n 2 | tail -n 1)
+
+
+echo ""
+echo "                Cores:$cpu_total                                  Memory:$mem_total"
+echo "                 Used:$cpu_used%                              Used:$mem_used"
+
