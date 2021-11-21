@@ -36,9 +36,6 @@ cp /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf
 sudo a2enconf phpmyadmin
 sudo service apache2 restart
 
-echo "Remove unneeded packages"
-apt-get -y -qq autoremove
-
 echo "Configure PHP"
 sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
 sudo update-alternatives --set php-config /usr/bin/php-config$PHP_VERSION

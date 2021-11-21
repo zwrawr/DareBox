@@ -13,6 +13,7 @@ source "vagrant" "darebox" {
  
   template = "Vagrantfile"
   synced_folder = "."
+
 }
 
 build {
@@ -36,5 +37,10 @@ build {
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{.Vars}} sudo -u vagrant -S -E bash '{{.Path}}'"
     script = "scripts/report.sh"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    script = "scripts/cleanup.sh"
   }
 }

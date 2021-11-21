@@ -10,3 +10,8 @@ output-darebox/
 *.code-workspace
 
 test/versions.csv.old
+
+# =======
+# APIKEYS
+# =======
+.apikeys
