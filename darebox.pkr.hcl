@@ -1,7 +1,3 @@
-variable "version" {
-  type    = string
-  default = "0.0.1"
-}
 
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
@@ -10,10 +6,9 @@ source "vagrant" "darebox" {
   communicator = "ssh"
   provider     = "virtualbox"
   source_path  = "bento/ubuntu-20.04"
- 
+
   template = "Vagrantfile"
   synced_folder = "."
-
 }
 
 build {
@@ -43,4 +38,14 @@ build {
     execute_command = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     script = "scripts/cleanup.sh"
   }
+
+  post-processors {
+    post-processor "vagrant-cloud" {
+      access_token = "${var.apikey}"
+      box_tag      = "hashicorp/precise64"
+      version      = "${var.version}"
+    }
+  }
 }
+
+
