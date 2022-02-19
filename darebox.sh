@@ -3,7 +3,7 @@
 TEST_DIR="./test"
 
 BOX="package.box"
-BOXDIR="output-darebox/"
+BOXDIR="output-darebox"
 
 
 
@@ -29,9 +29,17 @@ reqs () {
 
 # Runs packer build
 build () {
-	packer build --force darebox.pkr.hcl
+	if [ "$1" == "upload" ]
+	then
+		echo "Building Box and Uploading"
+		packer build -var-file="vars.pkrvar.hcl" -force darebox.pkr.hcl
+	else
+		echo "Building Box (No Upload)"
+		packer build -var-file="vars.pkrvar.hcl" -except="vagrant-cloud" -force darebox.pkr.hcl
+	fi
 	echo "Box Built"
 }
+
 
 # Brings an instance of our vagrant box up and runs our test script
 test () {
@@ -49,7 +57,10 @@ test_clean () {
 
 	vagrant halt
 	vagrant destroy -f
-	vagrant box remove "../${BOXDIR}package.box"
+	if vagrant box list | grep -q "../${BOXDIR}/package.box";
+	then
+		vagrant box remove "../${BOXDIR}/package.box"
+	fi
 
 	if [[ -d .vagrant ]]
 	then
@@ -79,37 +90,31 @@ clean () {
 }
 
 size () {
-	if [[  -f $BOXDIR$BOX ]]
+	if [[  -f "$BOXDIR/$BOX" ]]
 	then
-		echo "Size: $(du --human-readable --apparent-size --time  $BOXDIR$BOX)"
+		echo "Size: $(du --human-readable --apparent-size --time  $BOXDIR/$BOX)"
 	else
-		echo "No box found at [$BOXDIR$BOX]"
-	fi
-}
-
-hash () {
-	if [[ -f "$BOXDIR$BOX" ]]
-	then
-		sha512sum "$BOXDIR$BOX" > "${BOXDIR}${BOX}.sha512"
-		cat "${BOXDIR}${BOX}.sha512"
+		echo "No box found at [$BOXDIR/$BOX]"
 	fi
 }
 
 usage () {
-	printf "\n./darebox.sh <command>\n\n"
-	printf "\tbuild - Runs packer build generating a provisioned vagrant box \n"
-	printf "\ttest - Runs our custom shell script to see if everything installed correctly\n"
-	printf "\tall - Runs build then test\n"
-	printf "\tclean - Removes build and test artifacts after shuting vms down\n"
-	printf "\tsize - Reports the size of the packaged Box\n"
-	printf "\thelp - Print this info\n"
+	printf "\n./darebox.sh <command> <|subcommand>\n\n"
+	printf "\t- build: Runs packer build generating a provisioned vagrant box \n"
+	printf "\t    - upload: subcommand to automatically upload the built box\n"
+	printf "\t- test: Runs our custom shell script to see if everything installed correctly\n"
+	printf "\t- all: Runs build then test\n"
+	printf "\t    - upload: subcommand to automatically upload the built box\n"
+	printf "\t- clean: Removes build and test artifacts after shuting vms down\n"
+	printf "\t- size: Reports the size of the packaged Box\n"
+	printf "\t- help: Print this info\n"
 }
 
 case $1 in
 
 	build)
 		reqs
-		build
+		build "$2"
 		size
 		;;
 
@@ -120,7 +125,7 @@ case $1 in
 
 	all)
 		reqs
-		build
+		build "$2"
 		test
 		clean
 		size
@@ -132,10 +137,6 @@ case $1 in
 
  	size)
 		size
-		;;
-
-	release)
-		hash
 		;;
 
 	help)

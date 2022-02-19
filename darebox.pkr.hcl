@@ -1,3 +1,12 @@
+variable "version" {
+  type =  string
+  default = "0.0.8"
+}
+
+variable "apikey" {
+   type =  string
+   default = "x"
+}
 
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
@@ -10,6 +19,7 @@ source "vagrant" "darebox" {
   template = "Vagrantfile"
   synced_folder = "."
 }
+
 
 build {
   sources = ["source.vagrant.darebox"]
@@ -42,10 +52,8 @@ build {
   post-processors {
     post-processor "vagrant-cloud" {
       access_token = "${var.apikey}"
-      box_tag      = "hashicorp/precise64"
+      box_tag      = "zwrawr/DareBox"
       version      = "${var.version}"
     }
   }
 }
-
-

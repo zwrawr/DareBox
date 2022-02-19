@@ -1,4 +1,5 @@
 Vagrant.configure(2) do |config|
+		
 	config.vm.define "source", autostart: false do |source|
 	  source.vm.box = "{{.SourceBox}}"
 	  config.ssh.insert_key = {{.InsertKey}}
@@ -15,11 +16,8 @@ Vagrant.configure(2) do |config|
 	  v.memory = 4096
 	  v.cpus = 4
 	end
-
-	if Vagrant.has_plugin?("vagrant-cachier")
-	  config.cache.scope = :box
-	end
-  
+	
+	
 	{{if ne .SyncedFolder "" -}}
 	  config.vm.synced_folder "{{.SyncedFolder}}", "/vagrant"
 	{{- else -}}
@@ -27,3 +25,4 @@ Vagrant.configure(2) do |config|
 	{{- end}}
 
   end
+  

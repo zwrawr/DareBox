@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # bashrc normally loads nvm but here we have to do it manually
 
 export NVM_DIR="$HOME/.nvm"

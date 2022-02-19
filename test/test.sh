@@ -164,8 +164,8 @@ if [ -f "$LOG.old" ]; then
 	if ! diff -rq $LOG "$LOG.old"; then
     report_warning "Some tools have changed version, You should update the package version"
     report_warning "Run the following to see changes"
-	report_warning "    git diff --color --word-diff=color {/vagrant/versions.csv{,.old}  inside box"
-	report_warning "    git diff --color --word-diff=color {./test/versions.csv{,.old}    outside box"
+	report_warning "    git diff --color --word-diff=color /vagrant/versions.csv{,.old}  inside box"
+	report_warning "    git diff --color --word-diff=color ./test/versions.csv{,.old}    outside box"
     exit 5
 fi
 fi
