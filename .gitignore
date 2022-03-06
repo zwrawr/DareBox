@@ -4,7 +4,7 @@
 **/.vagrant/
 
 # Packer output
-output-darebox/
+output/
 
 # VSCode
 *.code-workspace
@@ -14,5 +14,4 @@ test/versions.csv.old
 # =======
 # APIKEYS
 # =======
-
-vars.pkrvar.hcl
+apikey.conf
